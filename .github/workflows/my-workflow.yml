@@ -19,8 +19,14 @@ jobs:
         with:
           node-version: '16'
       
-      - name: Install dependencies
-        run: make install
+      - name: Install dependencies and build
+        # Install and build project
+        run: |
+          make install
+          make build
+        # Add environment variables
+        env:
+          CI: true
       
       - name: Run linter
         run: make lint
