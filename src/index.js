@@ -1,4 +1,4 @@
 import 'bootstrap/dist/css/bootstrap.min.css';
-// import './style.css';
+import runApp from './app.js';
 
-console.log('Hello, World!');
+runApp();
