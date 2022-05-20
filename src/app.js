@@ -1,24 +1,6 @@
 import onChange from 'on-change';
 import * as yup from 'yup';
-import _ from 'lodash';
 import render from './view.js';
-
-const validateAsync = async (field, state) => {
-  const schema = yup
-    .string()
-    .required()
-    .url('Ссылка должна быть валидным URL')
-    .notOneOf(state.feeds, 'RSS уже существует');
-
-  try {
-    await schema.validate(field);
-    return {};
-  } catch (e) {
-    // return _.keyBy(e.inner, 'path');
-    const [err] = e.errors;
-    return { errorContent: err };
-  }
-};
 
 const runApp = () => {
   const s = {
@@ -37,19 +19,29 @@ const runApp = () => {
 
   const state = onChange(s, render(elements));
 
-  elements.form.addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const formData = new FormData(e.target);
+  elements.form.addEventListener('submit', (event) => {
+    event.preventDefault();
+    const formData = new FormData(event.target);
     const inputValue = formData.get('url');
-    const errors = await validateAsync(inputValue, state);
-    state.form.errors = errors;
-    if (_.isEmpty(errors)) {
-      state.feeds.push(inputValue);
-      state.form.valid = true;
-    } else {
-      state.form.valid = false;
-    }
-    // console.log(state.form);
+
+    const schema = yup
+      .string()
+      .required()
+      .url('Ссылка должна быть валидным URL')
+      .notOneOf(state.feeds, 'RSS уже существует');
+
+    schema.validate(inputValue)
+      .then(() => {
+        state.form.errors = {};
+        state.form.valid = true;
+        state.feeds.push(inputValue);
+      })
+      .catch((e) => {
+        const [err] = e.errors;
+        const data = { errorContent: err };
+        state.form.errors = data;
+        state.form.valid = false;
+      });
   });
 };
 
