@@ -1,8 +1,18 @@
 import onChange from 'on-change';
 import * as yup from 'yup';
+import i18next from 'i18next';
+import resources from './locales/index.js';
 import render from './view.js';
 
 const runApp = () => {
+  const defaultLanguage = 'ru';
+  const i18nextInstance = i18next.createInstance();
+  i18nextInstance.init({
+    lng: defaultLanguage,
+    debug: false,
+    resources,
+  });
+
   const s = {
     form: {
       valid: null,
@@ -17,7 +27,7 @@ const runApp = () => {
 
   const elements = { input, form, feedback };
 
-  const state = onChange(s, render(elements));
+  const state = onChange(s, render(elements, i18nextInstance));
 
   elements.form.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -27,8 +37,8 @@ const runApp = () => {
     const schema = yup
       .string()
       .required()
-      .url('Ссылка должна быть валидным URL')
-      .notOneOf(state.feeds, 'RSS уже существует');
+      .url(i18nextInstance.t('errors.url'))
+      .notOneOf(state.feeds, i18nextInstance.t('errors.notOneOf'));
 
     schema.validate(inputValue)
       .then(() => {

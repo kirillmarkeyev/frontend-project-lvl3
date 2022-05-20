@@ -1,6 +1,6 @@
 /* eslint-disable no-param-reassign */
 
-const render = (elements) => (path, value) => {
+const render = (elements, i18nextInstance) => (path, value) => {
   switch (path) {
     case 'form.errors':
       elements.feedback.textContent = '';
@@ -18,7 +18,7 @@ const render = (elements) => (path, value) => {
       elements.input.classList.remove('is-invalid');
 
       elements.feedback.textContent = '';
-      elements.feedback.textContent = 'RSS успешно загружен';
+      elements.feedback.textContent = i18nextInstance.t('success.rss');
       elements.form.reset();
       elements.input.focus();
       break;
