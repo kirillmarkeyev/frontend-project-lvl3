@@ -1,8 +1,10 @@
 import onChange from 'on-change';
 import * as yup from 'yup';
 import i18next from 'i18next';
+import axios from 'axios';
 import resources from './locales/index.js';
 import render from './view.js';
+import getParsedRSS from './rssParser.js';
 
 const runApp = () => {
   const defaultLanguage = 'ru';
@@ -19,7 +21,17 @@ const runApp = () => {
       errors: {},
     },
     feeds: [],
+    content: [],
   };
+
+  yup.setLocale({
+    string: {
+      url: () => ({ key: 'notValidUrl' }),
+    },
+    mixed: {
+      notOneOf: () => ({ key: 'notOneOf' }),
+    },
+  });
 
   const input = document.querySelector('#url-input');
   const form = document.querySelector('.rss-form');
@@ -37,21 +49,36 @@ const runApp = () => {
     const schema = yup
       .string()
       .required()
-      .url(i18nextInstance.t('errors.url'))
-      .notOneOf(state.feeds, i18nextInstance.t('errors.notOneOf'));
+      .url()
+      .notOneOf(state.feeds);
 
     schema.validate(inputValue)
       .then(() => {
-        state.form.errors = {};
-        state.form.valid = true;
-        state.feeds.push(inputValue);
+        console.log('Validation is OK!!!');
+        return axios(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(inputValue)}`)
+          .then((response) => {
+            console.log('Download OK!!!');
+            return getParsedRSS(response.data.contents);
+          })
+          .then((parsedContent) => {
+            console.log('Parsing is OK!');
+            state.feeds.push(inputValue);
+            state.content.push(parsedContent);
+            state.form.errors = {};
+            state.form.valid = true;
+          })
+          .catch((err) => {
+            state.form.errors = { key: err.message };
+            state.form.valid = false;
+            console.log('Parsing error!!!');
+          });
       })
-      .catch((e) => {
-        const [err] = e.errors;
-        const data = { errorContent: err };
-        state.form.errors = data;
+      .catch((err) => {
+        const [key] = err.errors;
+        state.form.errors = key;
         state.form.valid = false;
       });
+    console.log(state);
   });
 };
 
