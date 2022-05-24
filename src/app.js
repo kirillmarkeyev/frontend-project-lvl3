@@ -17,7 +17,8 @@ const runApp = () => {
 
   const s = {
     form: {
-      valid: null,
+      processState: 'filling', // filling, sending, added, error
+      valid: null, // возможно, удалить
       errors: {},
     },
     feeds: [],
@@ -36,13 +37,22 @@ const runApp = () => {
   const input = document.querySelector('#url-input');
   const form = document.querySelector('.rss-form');
   const feedback = document.querySelector('.feedback');
+  const submit = document.querySelector('button[type="submit"]');
 
-  const elements = { input, form, feedback };
+  const elements = {
+    input,
+    form,
+    feedback,
+    submit,
+  };
 
   const state = onChange(s, render(elements, i18nextInstance));
 
   elements.form.addEventListener('submit', (event) => {
     event.preventDefault();
+
+    state.form.processState = 'sending';
+
     const formData = new FormData(event.target);
     const inputValue = formData.get('url');
 
@@ -66,10 +76,12 @@ const runApp = () => {
             state.content.push(parsedContent);
             state.form.errors = {};
             state.form.valid = true;
+            state.form.processState = 'added';
           })
           .catch((err) => {
             state.form.errors = { key: err.message };
             state.form.valid = false;
+            state.form.processState = 'error';
             console.log('Parsing error!!!');
           });
       })
@@ -77,6 +89,7 @@ const runApp = () => {
         const [key] = err.errors;
         state.form.errors = key;
         state.form.valid = false;
+        state.form.processState = 'error';
       });
     console.log(state);
   });
