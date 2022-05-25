@@ -61,7 +61,7 @@ const renderFeeds = (elements, i18nextInstance, feeds) => {
 
   const h2 = document.createElement('h2');
   h2.classList.add('card-title', 'h4');
-  h2.textContent = 'Фиды';
+  h2.textContent = i18nextInstance.t('main.feeds');
   div.append(h2);
 
   const ul = document.createElement('ul');
@@ -84,6 +84,41 @@ const renderFeeds = (elements, i18nextInstance, feeds) => {
   });
 };
 
+const renderPosts = (elements, i18nextInstance, posts) => {
+  elements.posts.innerHTML = '';
+  const container = document.createElement('div');
+  container.classList.add('card', 'border-0');
+  elements.posts.append(container);
+
+  const div = document.createElement('div');
+  div.classList.add('card-body');
+  container.append(div);
+
+  const h2 = document.createElement('h2');
+  h2.classList.add('card-title', 'h4');
+  h2.textContent = i18nextInstance.t('main.posts');
+  div.append(h2);
+
+  const ul = document.createElement('ul');
+  ul.classList.add('list-group', 'border-0', 'rounded-0');
+  container.append(ul);
+
+  posts.forEach((element) => {
+    element.posts.forEach((post) => {
+      const li = document.createElement('li');
+      li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
+      const a = document.createElement('a');
+      a.classList.add('fw-bold');
+      a.setAttribute('href', post.link);
+      a.setAttribute('target', '_blank');
+      a.setAttribute('rel', 'noopener noreferrer');
+      a.textContent = post.title;
+      li.append(a);
+      ul.append(li);
+    });
+  });
+};
+
 const render = (elements, i18nextInstance) => (path, value) => {
   switch (path) {
     case 'form.processState':
@@ -95,6 +130,7 @@ const render = (elements, i18nextInstance) => (path, value) => {
       break;
 
     case 'content':
+      renderPosts(elements, i18nextInstance, value);
       renderFeeds(elements, i18nextInstance, value);
       break;
 

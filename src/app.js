@@ -39,6 +39,7 @@ const runApp = () => {
   const feedback = document.querySelector('.feedback');
   const submit = document.querySelector('button[type="submit"]');
   const feeds = document.querySelector('.feeds');
+  const posts = document.querySelector('.posts');
 
   const elements = {
     input,
@@ -46,6 +47,7 @@ const runApp = () => {
     feedback,
     submit,
     feeds,
+    posts,
   };
 
   const state = onChange(s, render(elements, i18nextInstance));

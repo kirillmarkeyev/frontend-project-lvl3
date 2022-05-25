@@ -8,5 +8,9 @@ export default {
     success: {
       rss: 'RSS успешно загружен',
     },
+    main: {
+      posts: 'Посты',
+      feeds: 'Фиды',
+    },
   },
 };
