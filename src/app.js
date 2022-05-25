@@ -38,12 +38,14 @@ const runApp = () => {
   const form = document.querySelector('.rss-form');
   const feedback = document.querySelector('.feedback');
   const submit = document.querySelector('button[type="submit"]');
+  const feeds = document.querySelector('.feeds');
 
   const elements = {
     input,
     form,
     feedback,
     submit,
+    feeds,
   };
 
   const state = onChange(s, render(elements, i18nextInstance));
@@ -72,8 +74,8 @@ const runApp = () => {
           })
           .then((parsedContent) => {
             console.log('Parsing is OK!');
-            state.feeds.push(inputValue);
-            state.content.push(parsedContent);
+            state.feeds.unshift(inputValue);
+            state.content.unshift(parsedContent);
             state.form.errors = {};
             state.form.valid = true;
             state.form.processState = 'added';
