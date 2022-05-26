@@ -69,7 +69,7 @@ const runApp = () => {
     schema.validate(inputValue)
       .then(() => {
         console.log('Validation is OK!!!');
-        return axios(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(inputValue)}`)
+        return axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(inputValue)}`)
           .then((response) => {
             console.log('Download OK!!!');
             return getParsedRSS(response.data.contents);
@@ -95,6 +95,28 @@ const runApp = () => {
       });
     console.log(state);
   });
+
+  // https://ru.hexlet.io/challenges/js_dom_progress_exercise
+  const updateRssPosts = () => {
+    state.form.urls.forEach((url) => {
+      axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(url)}`)
+        .then((response) => {
+          console.log('Updating is OK!!!');
+          return getParsedRSS(response.data.contents);
+        })
+        .then((parsedContent) => {
+          const { posts: newPosts } = parsedContent;
+          const addedPostsLinks = state.posts.map((post) => post.link);
+          const addedNewPosts = newPosts.filter((post) => !addedPostsLinks.includes(post.link));
+          state.posts = addedNewPosts.concat(state.posts);
+        })
+        .catch((err) => {
+          throw err;
+        });
+    });
+    setTimeout(() => updateRssPosts(), 5000);
+  };
+  updateRssPosts();
 };
 
 export default runApp;
