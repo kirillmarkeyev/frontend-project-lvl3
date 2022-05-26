@@ -18,11 +18,11 @@ const runApp = () => {
   const s = {
     form: {
       processState: 'filling', // filling, sending, added, error
-      valid: null, // возможно, удалить
       errors: {},
+      urls: [],
     },
     feeds: [],
-    content: [],
+    posts: [],
   };
 
   yup.setLocale({
@@ -64,7 +64,7 @@ const runApp = () => {
       .string()
       .required()
       .url()
-      .notOneOf(state.feeds);
+      .notOneOf(state.form.urls);
 
     schema.validate(inputValue)
       .then(() => {
@@ -76,15 +76,14 @@ const runApp = () => {
           })
           .then((parsedContent) => {
             console.log('Parsing is OK!');
-            state.feeds.unshift(inputValue);
-            state.content.unshift(parsedContent);
+            state.form.urls.unshift(inputValue);
+            state.feeds.unshift(parsedContent.feed);
+            state.posts = parsedContent.posts.concat(state.posts);
             state.form.errors = {};
-            state.form.valid = true;
             state.form.processState = 'added';
           })
           .catch((err) => {
             state.form.errors = { key: err.message };
-            state.form.valid = false;
             state.form.processState = 'error';
             console.log('Parsing error!!!');
           });
@@ -92,7 +91,6 @@ const runApp = () => {
       .catch((err) => {
         const [key] = err.errors;
         state.form.errors = key;
-        state.form.valid = false;
         state.form.processState = 'error';
       });
     console.log(state);

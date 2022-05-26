@@ -11,6 +11,8 @@ const getParsedRSS = (content) => {
   const descriptionEl = parsedContent.querySelector('description');
   const description = descriptionEl.textContent;
 
+  const feed = { title, description };
+
   const items = parsedContent.querySelectorAll('item');
   const posts = [...items].map((item) => {
     const itemTitleEl = item.querySelector('title');
@@ -24,7 +26,7 @@ const getParsedRSS = (content) => {
 
     return { title: itemTitle, description: itemDescription, link: itemLink };
   });
-  return { title, description, posts };
+  return { feed, posts };
 };
 
 export default getParsedRSS;
