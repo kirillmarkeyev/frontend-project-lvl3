@@ -51,16 +51,20 @@ const renderErrors = (elements, i18nextInstance, errors) => {
 
 const renderFeeds = (elements, i18nextInstance, feeds) => {
   elements.feeds.innerHTML = '';
+
   const container = document.createElement('div');
   container.classList.add('card', 'border-0');
   elements.feeds.append(container);
+
   const div = document.createElement('div');
   div.classList.add('card-body');
   container.append(div);
+
   const h2 = document.createElement('h2');
   h2.classList.add('card-title', 'h4');
   h2.textContent = i18nextInstance.t('main.feeds');
   div.append(h2);
+
   const ul = document.createElement('ul');
   ul.classList.add('list-group', 'border-0', 'rounded-0');
   container.append(ul);
@@ -75,6 +79,7 @@ const renderFeeds = (elements, i18nextInstance, feeds) => {
     const p = document.createElement('p');
     p.classList.add('m-0', 'small', 'text-black-50');
     p.textContent = feed.description;
+
     li.append(p);
     ul.append(li);
   });
@@ -82,16 +87,20 @@ const renderFeeds = (elements, i18nextInstance, feeds) => {
 
 const renderPosts = (elements, i18nextInstance, posts) => {
   elements.posts.innerHTML = '';
+
   const container = document.createElement('div');
   container.classList.add('card', 'border-0');
   elements.posts.append(container);
+
   const div = document.createElement('div');
   div.classList.add('card-body');
   container.append(div);
+
   const h2 = document.createElement('h2');
   h2.classList.add('card-title', 'h4');
   h2.textContent = i18nextInstance.t('main.posts');
   div.append(h2);
+
   const ul = document.createElement('ul');
   ul.classList.add('list-group', 'border-0', 'rounded-0');
   container.append(ul);
@@ -105,6 +114,7 @@ const renderPosts = (elements, i18nextInstance, posts) => {
     a.setAttribute('target', '_blank');
     a.setAttribute('rel', 'noopener noreferrer');
     a.textContent = post.title;
+
     li.append(a);
     ul.append(li);
   });
