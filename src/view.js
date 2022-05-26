@@ -51,7 +51,6 @@ const renderErrors = (elements, i18nextInstance, errors) => {
 
 const renderFeeds = (elements, i18nextInstance, feeds) => {
   elements.feeds.innerHTML = '';
-
   const container = document.createElement('div');
   container.classList.add('card', 'border-0');
   elements.feeds.append(container);
@@ -79,15 +78,14 @@ const renderFeeds = (elements, i18nextInstance, feeds) => {
     const p = document.createElement('p');
     p.classList.add('m-0', 'small', 'text-black-50');
     p.textContent = feed.description;
-
     li.append(p);
+
     ul.append(li);
   });
 };
 
 const renderPosts = (elements, i18nextInstance, posts) => {
   elements.posts.innerHTML = '';
-
   const container = document.createElement('div');
   container.classList.add('card', 'border-0');
   elements.posts.append(container);
@@ -111,10 +109,10 @@ const renderPosts = (elements, i18nextInstance, posts) => {
     const a = document.createElement('a');
     a.classList.add('fw-bold');
     a.setAttribute('href', post.link);
+    a.setAttribute('data-id', post.id);
     a.setAttribute('target', '_blank');
     a.setAttribute('rel', 'noopener noreferrer');
     a.textContent = post.title;
-
     li.append(a);
     ul.append(li);
   });
