@@ -54,16 +54,13 @@ const renderFeeds = (elements, i18nextInstance, feeds) => {
   const container = document.createElement('div');
   container.classList.add('card', 'border-0');
   elements.feeds.append(container);
-
   const div = document.createElement('div');
   div.classList.add('card-body');
   container.append(div);
-
   const h2 = document.createElement('h2');
   h2.classList.add('card-title', 'h4');
   h2.textContent = i18nextInstance.t('main.feeds');
   div.append(h2);
-
   const ul = document.createElement('ul');
   ul.classList.add('list-group', 'border-0', 'rounded-0');
   container.append(ul);
@@ -88,16 +85,13 @@ const renderPosts = (elements, i18nextInstance, posts) => {
   const container = document.createElement('div');
   container.classList.add('card', 'border-0');
   elements.posts.append(container);
-
   const div = document.createElement('div');
   div.classList.add('card-body');
   container.append(div);
-
   const h2 = document.createElement('h2');
   h2.classList.add('card-title', 'h4');
   h2.textContent = i18nextInstance.t('main.posts');
   div.append(h2);
-
   const ul = document.createElement('ul');
   ul.classList.add('list-group', 'border-0', 'rounded-0');
   container.append(ul);
