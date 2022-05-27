@@ -23,6 +23,7 @@ const runApp = () => {
     },
     feeds: [],
     posts: [],
+    visitedPostsId: new Set(), // https://ru.hexlet.io/courses/js_collections/lessons/set/theory_unit
   };
 
   yup.setLocale({
@@ -50,7 +51,7 @@ const runApp = () => {
     posts,
   };
 
-  const state = onChange(s, render(elements, i18nextInstance));
+  const state = onChange(s, render(s, elements, i18nextInstance));
 
   elements.form.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -93,7 +94,13 @@ const runApp = () => {
         state.form.errors = key;
         state.form.processState = 'error';
       });
-    console.log(state);
+    // console.log(state);
+  });
+
+  elements.posts.addEventListener('click', (event) => {
+    const currentId = event.target.dataset.id;
+    state.visitedPostsId.add(currentId);
+    // console.log(state);
   });
 
   // https://ru.hexlet.io/challenges/js_dom_progress_exercise

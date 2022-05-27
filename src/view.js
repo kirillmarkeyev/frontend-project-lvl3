@@ -71,12 +71,10 @@ const renderFeeds = (elements, i18nextInstance, feeds) => {
   feeds.forEach((feed) => {
     const li = document.createElement('li');
     li.classList.add('list-group-item', 'border-0', 'border-end-0');
-
     const h3 = document.createElement('h3');
     h3.classList.add('h6', 'm-0');
     h3.textContent = feed.title;
     li.append(h3);
-
     const p = document.createElement('p');
     p.classList.add('m-0', 'small', 'text-black-50');
     p.textContent = feed.description;
@@ -86,7 +84,7 @@ const renderFeeds = (elements, i18nextInstance, feeds) => {
   });
 };
 
-const renderPosts = (elements, i18nextInstance, posts) => {
+const renderPosts = (state, elements, i18nextInstance, posts) => {
   elements.posts.innerHTML = '';
   const container = document.createElement('div');
   container.classList.add('card', 'border-0');
@@ -110,7 +108,11 @@ const renderPosts = (elements, i18nextInstance, posts) => {
     li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
 
     const a = document.createElement('a');
-    a.classList.add('fw-bold');
+    if (state.visitedPostsId.has(post.id)) {
+      a.classList.add('fw-normal', 'link-secondary');
+    } else {
+      a.classList.add('fw-bold');
+    }
     a.setAttribute('href', post.link);
     a.setAttribute('data-id', post.id);
     a.setAttribute('target', '_blank');
@@ -125,13 +127,22 @@ const renderPosts = (elements, i18nextInstance, posts) => {
     button.setAttribute('data-bs-toggle', 'modal');
     button.setAttribute('data-bs-target', '#modal');
     button.textContent = i18nextInstance.t('main.openModal');
-    li.append(button);
 
+    li.append(button);
     ul.append(li);
   });
 };
 
-const render = (elements, i18nextInstance) => (path, value) => {
+const renderVisitedPosts = (visitedPostsId) => {
+  console.log(visitedPostsId);
+  visitedPostsId.forEach((id) => {
+    const a = document.querySelector(`a[data-id="${id}"]`);
+    a.classList.remove('fw-bold');
+    a.classList.add('fw-normal', 'link-secondary');
+  });
+};
+
+const render = (state, elements, i18nextInstance) => (path, value) => {
   switch (path) {
     case 'form.processState':
       handleProcessState(elements, i18nextInstance, value);
@@ -146,7 +157,11 @@ const render = (elements, i18nextInstance) => (path, value) => {
       break;
 
     case 'posts':
-      renderPosts(elements, i18nextInstance, value);
+      renderPosts(state, elements, i18nextInstance, value);
+      break;
+
+    case 'visitedPostsId':
+      renderVisitedPosts(value);
       break;
 
     default:
