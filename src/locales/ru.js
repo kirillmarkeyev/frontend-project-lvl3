@@ -11,6 +11,7 @@ export default {
     main: {
       posts: 'Посты',
       feeds: 'Фиды',
+      openModal: 'Просмотр',
     },
   },
 };

@@ -71,10 +71,12 @@ const renderFeeds = (elements, i18nextInstance, feeds) => {
   feeds.forEach((feed) => {
     const li = document.createElement('li');
     li.classList.add('list-group-item', 'border-0', 'border-end-0');
+
     const h3 = document.createElement('h3');
     h3.classList.add('h6', 'm-0');
     h3.textContent = feed.title;
     li.append(h3);
+
     const p = document.createElement('p');
     p.classList.add('m-0', 'small', 'text-black-50');
     p.textContent = feed.description;
@@ -106,6 +108,7 @@ const renderPosts = (elements, i18nextInstance, posts) => {
   posts.forEach((post) => {
     const li = document.createElement('li');
     li.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
+
     const a = document.createElement('a');
     a.classList.add('fw-bold');
     a.setAttribute('href', post.link);
@@ -114,6 +117,16 @@ const renderPosts = (elements, i18nextInstance, posts) => {
     a.setAttribute('rel', 'noopener noreferrer');
     a.textContent = post.title;
     li.append(a);
+
+    const button = document.createElement('button');
+    button.classList.add('btn', 'btn-outline-primary', 'btn-sm');
+    button.setAttribute('type', 'button');
+    button.setAttribute('data-id', post.id);
+    button.setAttribute('data-bs-toggle', 'modal');
+    button.setAttribute('data-bs-target', '#modal');
+    button.textContent = i18nextInstance.t('main.openModal');
+    li.append(button);
+
     ul.append(li);
   });
 };
