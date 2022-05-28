@@ -145,6 +145,7 @@ const renderCurrentModal = (state, elements, currentPostId) => {
   const currentPost = state.posts.find((post) => post.id === currentPostId);
   elements.modalTitle.textContent = currentPost.title;
   elements.modalBody.textContent = currentPost.description;
+  elements.modalA.setAttribute('href', currentPost.link);
 };
 
 const render = (state, elements, i18nextInstance) => (path, value) => {

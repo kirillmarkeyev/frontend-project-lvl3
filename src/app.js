@@ -44,6 +44,7 @@ const runApp = () => {
   const posts = document.querySelector('.posts');
   const modalTitle = document.querySelector('.modal-title');
   const modalBody = document.querySelector('.modal-body');
+  const modalA = document.querySelector('.full-article');
 
   const elements = {
     input,
@@ -54,6 +55,7 @@ const runApp = () => {
     posts,
     modalTitle,
     modalBody,
+    modalA,
   };
 
   const state = onChange(s, render(s, elements, i18nextInstance));
