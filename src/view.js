@@ -1,7 +1,5 @@
 /* eslint-disable no-param-reassign */
 
-import _ from 'lodash';
-
 const handleProcessState = (elements, i18nextInstance, processState) => {
   switch (processState) {
     case 'filling':
@@ -37,8 +35,8 @@ const handleProcessState = (elements, i18nextInstance, processState) => {
   }
 };
 
-const renderErrors = (elements, i18nextInstance, errors) => {
-  if (_.isEmpty(errors)) {
+const renderErrors = (elements, i18nextInstance, errorValue) => {
+  if (errorValue === '') {
     return;
   }
   elements.feedback.classList.remove('text-success');
@@ -46,7 +44,7 @@ const renderErrors = (elements, i18nextInstance, errors) => {
   elements.input.classList.add('is-invalid');
 
   elements.feedback.textContent = '';
-  elements.feedback.textContent = i18nextInstance.t(`errors.${errors.key}`);
+  elements.feedback.textContent = i18nextInstance.t(`errors.${errorValue}`);
 };
 
 const renderFeeds = (elements, i18nextInstance, feeds) => {

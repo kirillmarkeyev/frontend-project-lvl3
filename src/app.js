@@ -8,6 +8,7 @@ import getParsedRSS from './rssParser.js';
 
 const runApp = () => {
   const defaultLanguage = 'ru';
+
   const i18nextInstance = i18next.createInstance();
   i18nextInstance.init({
     lng: defaultLanguage,
@@ -18,7 +19,7 @@ const runApp = () => {
   const s = {
     form: {
       processState: 'filling', // filling, sending, added, error
-      errors: {},
+      errors: '',
       urls: [],
     },
     feeds: [],
@@ -29,10 +30,10 @@ const runApp = () => {
 
   yup.setLocale({
     string: {
-      url: () => ({ key: 'notValidUrl' }),
+      url: 'notValidUrl',
     },
     mixed: {
-      notOneOf: () => ({ key: 'notOneOf' }),
+      notOneOf: 'notOneOf',
     },
   });
 
@@ -75,33 +76,23 @@ const runApp = () => {
       .notOneOf(state.form.urls);
 
     schema.validate(inputValue)
-      .then(() => {
-        console.log('Validation is OK!!!');
-        return axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(inputValue)}`)
-          .then((response) => {
-            console.log('Download OK!!!');
-            return getParsedRSS(response.data.contents);
-          })
-          .then((parsedContent) => {
-            console.log('Parsing is OK!');
-            state.form.urls.unshift(inputValue);
-            state.feeds.unshift(parsedContent.feed);
-            state.posts = parsedContent.posts.concat(state.posts);
-            state.form.errors = {};
-            state.form.processState = 'added';
-          })
-          .catch((err) => {
-            state.form.errors = { key: err.message };
-            state.form.processState = 'error';
-            console.log('Parsing error!!!');
-          });
+      .then(() => axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(inputValue)}`))
+      .then((response) => getParsedRSS(response.data.contents))
+      .then((parsedContent) => {
+        state.form.urls.unshift(inputValue);
+        state.feeds.unshift(parsedContent.feed);
+        state.posts = parsedContent.posts.concat(state.posts);
+        state.form.errors = '';
+        state.form.processState = 'added';
       })
       .catch((err) => {
-        const [key] = err.errors;
-        state.form.errors = key;
         state.form.processState = 'error';
+        if (err.name === 'AxiosError') {
+          state.form.errors = 'network';
+        } else {
+          state.form.errors = err.message;
+        }
       });
-    // console.log(state);
   });
 
   elements.posts.addEventListener('click', (event) => {
@@ -114,12 +105,9 @@ const runApp = () => {
   const updateRssPosts = () => {
     state.form.urls.forEach((url) => {
       axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(url)}`)
-        .then((response) => {
-          console.log('Updating is OK!!!');
-          return getParsedRSS(response.data.contents);
-        })
-        .then((parsedContent) => {
-          const { posts: newPosts } = parsedContent;
+        .then((updatedResponse) => getParsedRSS(updatedResponse.data.contents))
+        .then((updatedParsedContent) => {
+          const { posts: newPosts } = updatedParsedContent;
           const addedPostsLinks = state.posts.map((post) => post.link);
           const addedNewPosts = newPosts.filter((post) => !addedPostsLinks.includes(post.link));
           state.posts = addedNewPosts.concat(state.posts);
