@@ -24,6 +24,7 @@ const runApp = () => {
     feeds: [],
     posts: [],
     visitedPostsId: new Set(), // https://ru.hexlet.io/courses/js_collections/lessons/set/theory_unit
+    currentPostId: '',
   };
 
   yup.setLocale({
@@ -41,6 +42,8 @@ const runApp = () => {
   const submit = document.querySelector('button[type="submit"]');
   const feeds = document.querySelector('.feeds');
   const posts = document.querySelector('.posts');
+  const modalTitle = document.querySelector('.modal-title');
+  const modalBody = document.querySelector('.modal-body');
 
   const elements = {
     input,
@@ -49,6 +52,8 @@ const runApp = () => {
     submit,
     feeds,
     posts,
+    modalTitle,
+    modalBody,
   };
 
   const state = onChange(s, render(s, elements, i18nextInstance));
@@ -100,7 +105,7 @@ const runApp = () => {
   elements.posts.addEventListener('click', (event) => {
     const currentId = event.target.dataset.id;
     state.visitedPostsId.add(currentId);
-    // console.log(state);
+    state.currentPostId = currentId;
   });
 
   // https://ru.hexlet.io/challenges/js_dom_progress_exercise

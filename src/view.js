@@ -134,12 +134,17 @@ const renderPosts = (state, elements, i18nextInstance, posts) => {
 };
 
 const renderVisitedPosts = (visitedPostsId) => {
-  console.log(visitedPostsId);
   visitedPostsId.forEach((id) => {
     const a = document.querySelector(`a[data-id="${id}"]`);
     a.classList.remove('fw-bold');
     a.classList.add('fw-normal', 'link-secondary');
   });
+};
+
+const renderCurrentModal = (state, elements, currentPostId) => {
+  const currentPost = state.posts.find((post) => post.id === currentPostId);
+  elements.modalTitle.textContent = currentPost.title;
+  elements.modalBody.textContent = currentPost.description;
 };
 
 const render = (state, elements, i18nextInstance) => (path, value) => {
@@ -162,6 +167,10 @@ const render = (state, elements, i18nextInstance) => (path, value) => {
 
     case 'visitedPostsId':
       renderVisitedPosts(value);
+      break;
+
+    case 'currentPostId':
+      renderCurrentModal(state, elements, value);
       break;
 
     default:
