@@ -8,24 +8,15 @@ const getParsedRSS = (content) => {
     throw new Error('notValidRss');
   }
 
-  const titleEl = parsedContent.querySelector('title');
-  const title = titleEl.textContent;
-  const descriptionEl = parsedContent.querySelector('description');
-  const description = descriptionEl.textContent;
-
+  const title = parsedContent.querySelector('title').textContent;
+  const description = parsedContent.querySelector('description').textContent;
   const feed = { title, description };
 
   const items = parsedContent.querySelectorAll('item');
   const posts = [...items].map((item) => {
-    const itemTitleEl = item.querySelector('title');
-    const itemTitle = itemTitleEl.textContent;
-
-    const itemDescriptionEl = item.querySelector('description');
-    const itemDescription = itemDescriptionEl.textContent;
-
-    const itemLinkEl = item.querySelector('link');
-    const itemLink = itemLinkEl.textContent;
-
+    const itemTitle = item.querySelector('title').textContent;
+    const itemDescription = item.querySelector('description').textContent;
+    const itemLink = item.querySelector('link').textContent;
     const itemId = _.uniqueId();
 
     return {
@@ -35,6 +26,7 @@ const getParsedRSS = (content) => {
       id: itemId,
     };
   });
+
   return { feed, posts };
 };
 
