@@ -8,7 +8,6 @@ const handleProcessState = (elements, i18nextInstance, processState) => {
 
     case 'sending':
       elements.submit.disabled = true;
-      elements.feedback.textContent = '';
       break;
 
     case 'added':
