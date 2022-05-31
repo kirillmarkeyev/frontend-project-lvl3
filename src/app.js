@@ -64,8 +64,6 @@ const runApp = () => {
   elements.form.addEventListener('submit', (event) => {
     event.preventDefault();
 
-    state.form.processState = 'sending';
-
     const formData = new FormData(event.target);
     const inputValue = formData.get('url');
 
@@ -76,7 +74,11 @@ const runApp = () => {
       .notOneOf(state.form.urls);
 
     schema.validate(inputValue)
-      .then(() => axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(inputValue)}`))
+      .then(() => {
+        state.form.errors = '';
+        state.form.processState = 'sending';
+        return axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(inputValue)}`);
+      })
       .then((response) => getParsedRSS(response.data.contents))
       .then((parsedContent) => {
         state.form.urls.unshift(inputValue);

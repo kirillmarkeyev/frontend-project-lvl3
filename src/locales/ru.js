@@ -6,6 +6,9 @@ export default {
       notValidRss: 'Ресурс не содержит валидный RSS',
       network: 'Ошибка сети',
     },
+    process: {
+      download: 'Идёт загрузка...',
+    },
     success: {
       rss: 'RSS успешно загружен',
     },
