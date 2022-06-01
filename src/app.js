@@ -103,10 +103,13 @@ const runApp = () => {
     state.currentPostId = currentId;
   });
 
-  // https://ru.hexlet.io/challenges/js_dom_progress_exercise
+  // https://ru.hexlet.io/challenges/js_dom_progress_exercise (запуск setTimeout по кругу)
+  // https://ru.hexlet.io/courses/js-asynchronous-programming/lessons/promise-all/theory_unit
+  /* Фиды нужно преобразовать в промисы и отправить массив промисов в Promise.all,
+  после него вставить блок finally и запустить процесс по кругу */
   const updateRssPosts = () => {
-    state.form.urls.forEach((url) => {
-      axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(url)}`)
+    const promises = state.form.urls
+      .map((url) => axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(url)}`)
         .then((updatedResponse) => getParsedRSS(updatedResponse.data.contents))
         .then((updatedParsedContent) => {
           const { posts: newPosts } = updatedParsedContent;
@@ -116,9 +119,9 @@ const runApp = () => {
         })
         .catch((err) => {
           throw err;
-        });
-    });
-    setTimeout(() => updateRssPosts(), 5000);
+        }));
+    Promise.all(promises)
+      .finally(() => setTimeout(() => updateRssPosts(), 5000));
   };
   updateRssPosts();
 };
