@@ -77,8 +77,8 @@ const runApp = () => {
         state.form.processState = 'sending';
         return axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(inputValue)}`);
       })
-      .then((response) => getParsedRSS(response.data.contents))
-      .then((parsedContent) => {
+      .then((response) => {
+        const parsedContent = getParsedRSS(response.data.contents);
         state.form.urls.unshift(inputValue);
         state.feeds.unshift(parsedContent.feed);
         state.posts = parsedContent.posts.concat(state.posts);
@@ -108,8 +108,8 @@ const runApp = () => {
   const updateRssPosts = () => {
     const promises = state.form.urls
       .map((url) => axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(url)}`)
-        .then((updatedResponse) => getParsedRSS(updatedResponse.data.contents))
-        .then((updatedParsedContent) => {
+        .then((updatedResponse) => {
+          const updatedParsedContent = getParsedRSS(updatedResponse.data.contents);
           const { posts: newPosts } = updatedParsedContent;
           const addedPostsLinks = state.posts.map((post) => post.link);
           const addedNewPosts = newPosts.filter((post) => !addedPostsLinks.includes(post.link));
