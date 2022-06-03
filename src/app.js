@@ -1,7 +1,9 @@
+import 'bootstrap';
 import onChange from 'on-change';
 import * as yup from 'yup';
 import i18next from 'i18next';
 import axios from 'axios';
+import './styles/main.css';
 import resources from './locales/index.js';
 import render from './view.js';
 import getParsedRSS from './rssParser.js';
