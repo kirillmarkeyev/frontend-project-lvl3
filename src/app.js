@@ -18,7 +18,7 @@ const runApp = () => {
     resources,
   });
 
-  const s = {
+  const initialState = {
     form: {
       processState: 'filling', // filling, sending, added, error
       errors: '',
@@ -61,7 +61,7 @@ const runApp = () => {
     modalA,
   };
 
-  const state = onChange(s, render(s, elements, i18nextInstance));
+  const state = onChange(initialState, render(initialState, elements, i18nextInstance));
 
   elements.form.addEventListener('submit', (event) => {
     event.preventDefault();
