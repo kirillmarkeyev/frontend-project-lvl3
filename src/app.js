@@ -8,6 +8,13 @@ import resources from './locales/index.js';
 import render from './view.js';
 import getParsedRSS from './rssParser.js';
 
+const getResultUrl = (url) => {
+  const resultUrl = new URL('https://allorigins.hexlet.app/get');
+  resultUrl.searchParams.set('disableCache', 'true');
+  resultUrl.searchParams.set('url', url);
+  return resultUrl;
+};
+
 const runApp = () => {
   const defaultLanguage = 'ru';
 
@@ -74,7 +81,7 @@ const runApp = () => {
       .then(() => {
         state.form.errors = '';
         state.form.processState = 'sending';
-        return axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(inputValue)}`);
+        return axios.get(getResultUrl(inputValue));
       })
       .then((response) => {
         const parsedContent = getParsedRSS(response.data.contents, inputValue);
@@ -106,7 +113,7 @@ const runApp = () => {
   const updateRssPosts = () => {
     const urls = state.feeds.map((feed) => feed.url);
     const promises = urls
-      .map((url) => axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(url)}`)
+      .map((url) => axios.get(getResultUrl(url))
         .then((updatedResponse) => {
           const updatedParsedContent = getParsedRSS(updatedResponse.data.contents);
           const { posts: newPosts } = updatedParsedContent;
