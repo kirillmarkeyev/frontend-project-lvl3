@@ -45,9 +45,7 @@ const runApp = () => {
   const submit = document.querySelector('button[type="submit"]');
   const feeds = document.querySelector('.feeds');
   const posts = document.querySelector('.posts');
-  const modalTitle = document.querySelector('.modal-title');
-  const modalBody = document.querySelector('.modal-body');
-  const modalA = document.querySelector('.full-article');
+  const modal = document.querySelector('#modal');
 
   const elements = {
     input,
@@ -56,9 +54,7 @@ const runApp = () => {
     submit,
     feeds,
     posts,
-    modalTitle,
-    modalBody,
-    modalA,
+    modal,
   };
 
   const state = onChange(initialState, render(initialState, elements, i18nextInstance));
