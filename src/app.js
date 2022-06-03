@@ -22,7 +22,6 @@ const runApp = () => {
     form: {
       processState: 'filling', // filling, sending, added, error
       errors: '',
-      urls: [],
     },
     feeds: [],
     posts: [],
@@ -69,7 +68,7 @@ const runApp = () => {
       .string()
       .required()
       .url()
-      .notOneOf(state.form.urls);
+      .notOneOf(state.feeds.map((feed) => feed.url));
 
     schema.validate(inputValue)
       .then(() => {
@@ -78,8 +77,7 @@ const runApp = () => {
         return axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(inputValue)}`);
       })
       .then((response) => {
-        const parsedContent = getParsedRSS(response.data.contents);
-        state.form.urls.unshift(inputValue);
+        const parsedContent = getParsedRSS(response.data.contents, inputValue);
         state.feeds.unshift(parsedContent.feed);
         state.posts = parsedContent.posts.concat(state.posts);
         state.form.errors = '';
@@ -106,7 +104,8 @@ const runApp = () => {
   /* Фиды нужно преобразовать в промисы и отправить массив промисов в Promise.all,
   после него вставить блок finally и запустить процесс по кругу */
   const updateRssPosts = () => {
-    const promises = state.form.urls
+    const urls = state.feeds.map((feed) => feed.url);
+    const promises = urls
       .map((url) => axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(url)}`)
         .then((updatedResponse) => {
           const updatedParsedContent = getParsedRSS(updatedResponse.data.contents);

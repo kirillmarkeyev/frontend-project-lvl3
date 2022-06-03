@@ -1,6 +1,6 @@
 import _ from 'lodash';
 
-const getParsedRSS = (content) => {
+const getParsedRSS = (content, url = null) => {
   const parser = new DOMParser();
   const parsedContent = parser.parseFromString(content, 'application/xml');
 
@@ -10,7 +10,7 @@ const getParsedRSS = (content) => {
 
   const title = parsedContent.querySelector('title').textContent;
   const description = parsedContent.querySelector('description').textContent;
-  const feed = { title, description };
+  const feed = { title, description, url };
 
   const items = parsedContent.querySelectorAll('item');
   const posts = [...items].map((item) => {
