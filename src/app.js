@@ -15,6 +15,8 @@ const getResultUrl = (url) => {
   return resultUrl;
 };
 
+const RssDownloader = (url) => axios.get(getResultUrl(url));
+
 const runApp = () => {
   const defaultLanguage = 'ru';
 
@@ -81,7 +83,7 @@ const runApp = () => {
       .then(() => {
         state.form.errors = '';
         state.form.processState = 'sending';
-        return axios.get(getResultUrl(inputValue));
+        return RssDownloader(inputValue);
       })
       .then((response) => {
         const parsedContent = getParsedRSS(response.data.contents, inputValue);
