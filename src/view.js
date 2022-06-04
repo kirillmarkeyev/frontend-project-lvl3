@@ -1,5 +1,7 @@
 /* eslint-disable no-param-reassign */
 
+import onChange from 'on-change';
+
 const handleProcessState = (elements, i18nextInstance, processState) => {
   switch (processState) {
     case 'filling':
@@ -156,7 +158,7 @@ const renderCurrentModal = (state, elements, currentPostId) => {
   modalLink.setAttribute('href', currentPost.link);
 };
 
-const render = (state, elements, i18nextInstance) => (path, value) => {
+const watch = (state, elements, i18nextInstance) => onChange(state, (path, value) => {
   switch (path) {
     case 'form.processState':
       handleProcessState(elements, i18nextInstance, value);
@@ -185,6 +187,6 @@ const render = (state, elements, i18nextInstance) => (path, value) => {
     default:
       break;
   }
-};
+});
 
-export default render;
+export default watch;

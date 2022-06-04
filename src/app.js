@@ -1,11 +1,10 @@
 import 'bootstrap';
-import onChange from 'on-change';
 import * as yup from 'yup';
 import i18next from 'i18next';
 import axios from 'axios';
 import './styles/main.css';
 import resources from './locales/index.js';
-import render from './view.js';
+import watch from './view.js';
 import getParsedRSS from './rssParser.js';
 
 const getResultUrl = (url) => {
@@ -65,7 +64,10 @@ const runApp = () => {
     modal,
   };
 
-  const state = onChange(initialState, render(initialState, elements, i18nextInstance));
+  /* Использование onChange нужно спрятать в слой view,
+  а здесь использовать через вызов функции-обертки watch:
+  const watchedState = watch(initialState, elements, i18nextInstance) */
+  const watchedState = watch(initialState, elements, i18nextInstance);
 
   elements.form.addEventListener('submit', (event) => {
     event.preventDefault();
@@ -77,35 +79,35 @@ const runApp = () => {
       .string()
       .required()
       .url()
-      .notOneOf(state.feeds.map((feed) => feed.url));
+      .notOneOf(watchedState.feeds.map((feed) => feed.url));
 
     schema.validate(inputValue)
       .then(() => {
-        state.form.errors = '';
-        state.form.processState = 'sending';
+        watchedState.form.errors = '';
+        watchedState.form.processState = 'sending';
         return RssDownloader(inputValue);
       })
       .then((response) => {
         const parsedContent = getParsedRSS(response.data.contents, inputValue);
-        state.feeds.unshift(parsedContent.feed);
-        state.posts = parsedContent.posts.concat(state.posts);
-        state.form.errors = '';
-        state.form.processState = 'added';
+        watchedState.feeds.unshift(parsedContent.feed);
+        watchedState.posts = parsedContent.posts.concat(watchedState.posts);
+        watchedState.form.errors = '';
+        watchedState.form.processState = 'added';
       })
       .catch((err) => {
-        state.form.processState = 'error';
+        watchedState.form.processState = 'error';
         if (err.name === 'AxiosError') {
-          state.form.errors = 'network';
+          watchedState.form.errors = 'network';
         } else {
-          state.form.errors = err.message;
+          watchedState.form.errors = err.message;
         }
       });
   });
 
   elements.posts.addEventListener('click', (event) => {
     const currentId = event.target.dataset.id;
-    state.visitedPostsId.add(currentId);
-    state.currentPostId = currentId;
+    watchedState.visitedPostsId.add(currentId);
+    watchedState.currentPostId = currentId;
   });
 
   // https://ru.hexlet.io/challenges/js_dom_progress_exercise (запуск setTimeout по кругу)
@@ -113,15 +115,15 @@ const runApp = () => {
   /* Фиды нужно преобразовать в промисы и отправить массив промисов в Promise.all,
   после него вставить блок finally и запустить процесс по кругу */
   const updateRssPosts = () => {
-    const urls = state.feeds.map((feed) => feed.url);
+    const urls = watchedState.feeds.map((feed) => feed.url);
     const promises = urls
       .map((url) => axios.get(getResultUrl(url))
         .then((updatedResponse) => {
           const updatedParsedContent = getParsedRSS(updatedResponse.data.contents);
           const { posts: newPosts } = updatedParsedContent;
-          const addedPostsLinks = state.posts.map((post) => post.link);
+          const addedPostsLinks = watchedState.posts.map((post) => post.link);
           const addedNewPosts = newPosts.filter((post) => !addedPostsLinks.includes(post.link));
-          state.posts = addedNewPosts.concat(state.posts);
+          watchedState.posts = addedNewPosts.concat(watchedState.posts);
         })
         .catch((err) => {
           throw err;
