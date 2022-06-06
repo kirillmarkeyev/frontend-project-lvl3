@@ -7,14 +7,14 @@ import resources from './locales/index.js';
 import watch from './view.js';
 import getParsedRSS from './rssParser.js';
 
-const getResultUrl = (url) => {
-  const resultUrl = new URL('https://allorigins.hexlet.app/get');
-  resultUrl.searchParams.set('disableCache', 'true');
-  resultUrl.searchParams.set('url', url);
-  return resultUrl;
+const buildProxiedUrl = (url) => {
+  const proxiedUrl = new URL('https://allorigins.hexlet.app/get');
+  proxiedUrl.searchParams.set('disableCache', 'true');
+  proxiedUrl.searchParams.set('url', url);
+  return proxiedUrl;
 };
 
-const getDownloadedRss = (url) => axios.get(getResultUrl(url));
+const getDownloadedRss = (url) => axios.get(buildProxiedUrl(url));
 
 const runApp = () => {
   const defaultLanguage = 'ru';
@@ -110,7 +110,7 @@ const runApp = () => {
   const updateRssPosts = () => {
     const urls = watchedState.feeds.map((feed) => feed.url);
     const promises = urls
-      .map((url) => axios.get(getResultUrl(url))
+      .map((url) => getDownloadedRss(url)
         .then((updatedResponse) => {
           const updatedParsedContent = getParsedRSS(updatedResponse.data.contents);
           const { posts: newPosts } = updatedParsedContent;
