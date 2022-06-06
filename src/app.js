@@ -33,7 +33,7 @@ const runApp = () => {
     },
     feeds: [],
     posts: [],
-    visitedPostsId: new Set(), // https://ru.hexlet.io/courses/js_collections/lessons/set/theory_unit
+    visitedPostsId: new Set(),
     currentPostId: '',
   };
 
@@ -64,9 +64,6 @@ const runApp = () => {
     modal,
   };
 
-  /* Использование onChange нужно спрятать в слой view,
-  а здесь использовать через вызов функции-обертки watch:
-  const watchedState = watch(initialState, elements, i18nextInstance) */
   const watchedState = watch(initialState, elements, i18nextInstance);
 
   elements.form.addEventListener('submit', (event) => {
@@ -110,10 +107,6 @@ const runApp = () => {
     watchedState.currentPostId = currentId;
   });
 
-  // https://ru.hexlet.io/challenges/js_dom_progress_exercise (запуск setTimeout по кругу)
-  // https://ru.hexlet.io/courses/js-asynchronous-programming/lessons/promise-all/theory_unit
-  /* Фиды нужно преобразовать в промисы и отправить массив промисов в Promise.all,
-  после него вставить блок finally и запустить процесс по кругу */
   const updateRssPosts = () => {
     const urls = watchedState.feeds.map((feed) => feed.url);
     const promises = urls
