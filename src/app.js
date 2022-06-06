@@ -93,10 +93,14 @@ const runApp = () => {
       })
       .catch((err) => {
         watchedState.form.processState = 'error';
-        if (err.name === 'AxiosError') {
+        if (err.isAxiosError) {
           watchedState.form.errors = 'network';
-        } else {
+        } else if (err.isParsingError) {
+          watchedState.form.errors = 'notValidRss';
+        } else if (err.name === 'ValidationError') {
           watchedState.form.errors = err.message;
+        } else {
+          watchedState.form.errors = 'unknown';
         }
       });
   });

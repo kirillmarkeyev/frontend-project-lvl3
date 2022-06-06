@@ -5,7 +5,9 @@ const getParsedRSS = (content, url = null) => {
   const parsedContent = parser.parseFromString(content, 'application/xml');
 
   if (parsedContent.querySelector('parsererror')) {
-    throw new Error('notValidRss');
+    const error = new Error();
+    error.isParsingError = true;
+    throw error;
   }
 
   const title = parsedContent.querySelector('title').textContent;

@@ -5,6 +5,7 @@ export default {
       notOneOf: 'RSS уже существует',
       notValidRss: 'Ресурс не содержит валидный RSS',
       network: 'Ошибка сети',
+      unknown: 'Что-то пошло не так... Попробуйте еще раз',
     },
     process: {
       download: 'Идёт загрузка...',
