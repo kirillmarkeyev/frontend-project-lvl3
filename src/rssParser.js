@@ -6,7 +6,10 @@ const getParsedRSS = (content, url = null) => {
 
   if (parsedContent.querySelector('parsererror')) {
     const error = new Error();
+    error.name = 'ParsingError';
+    error.message = 'Does not contain valid RSS';
     error.isParsingError = true;
+    console.log(error.message);
     throw error;
   }
 
